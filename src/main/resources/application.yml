@@ -1,0 +1,48 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+    type: oracle.ucp.jdbc.PoolDataSource
+  jpa:
+    # https://docs.jboss.org/hibernate/orm/6.0/migration-guide/migration-guide.html#_dialects
+    database-platform: org.hibernate.dialect.OracleDialect
+  cloud:
+    stream:
+      bindings:
+        input-in-0:
+          destination: test1
+          group: test1-consumer
+        output-out-0:
+          destination: test1
+      kafka:
+        binder:
+          brokers: localhost
+          defaultBrokerPort: 9092
+          healthTimeout: 5 # defaults to 60, so actuator/health hangs for 60s when kafka is down
+
+management:
+  endpoints:
+    jmx:
+      exposure:
+        include: '*'
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    beans:
+      cache:
+        time-to-live: 10s
+    health:
+      show-details: always
+    env:
+      show-values: always
+    configprops:
+      show-values: always
+
+server:
+  port: 8081
+  tomcat:
+    mbeanregistry:
+      enabled: true
